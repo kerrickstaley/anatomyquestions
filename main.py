@@ -23,10 +23,18 @@ class MultipleChoice:
   def parse(cls, q):
     lines = q.splitlines()
 
-    prompt = lines[0].split(') ', 1)[1]
+    promptlines = []
+    idx = 0
+    while True:
+      if re.search(r'^[A-Z]\) ', lines[idx]):
+        break
+      promptlines.append(lines[idx])
+      idx += 1
+
+    promptlines[0] = promptlines[0].split(') ', 1)[1]
+    prompt = '\n'.join(promptlines)
 
     options = []
-    idx = 1
     while True:
       if not re.search(r'^[A-Z]\) ', lines[idx]):
         break
@@ -42,8 +50,9 @@ class MultipleChoice:
 
   def to_note(self):
     tags = [f'chapter_{self.learning_outcome.split(".")[0]}', f'learning_outcome_{self.learning_outcome}']
+    prompt_html = self.prompt.replace('\n', '<br>')
     options_html = ''.join('<li>' + opt + '</li>' for opt in self.options)
-    return AnatomyMultipleChoiceNote(fields=[self.prompt, options_html, self.answer], tags=tags)
+    return AnatomyMultipleChoiceNote(fields=[prompt_html, options_html, self.answer], tags=tags)
 
   def __str__(self):
     options_str = '\n'.join(string.ascii_uppercase[i] + ') ' + opt for i, opt in enumerate(self.options))
