@@ -1,0 +1,20 @@
+[
+    {
+        "font": "Liberation Sans",
+        "media": [],
+        "name": "Front",
+        "ord": 0,
+        "rtl": false,
+        "size": 20,
+        "sticky": false
+    },
+    {
+        "font": "Liberation Sans",
+        "media": [],
+        "name": "Back",
+        "ord": 1,
+        "rtl": false,
+        "size": 20,
+        "sticky": false
+    }
+]

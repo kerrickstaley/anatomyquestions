@@ -8,6 +8,10 @@ import subprocess
 import os.path
 import glob
 
+import genanki
+from note import AnatomyNote
+
+
 class MultipleChoice:
   def __init__(self, prompt, options, answer, learning_outcome=None):
     self.prompt = prompt
@@ -146,9 +150,13 @@ class Processor:
 
 def main():
   p = Processor('in.doc')
-  for q in p.multiple_choice_questions + p.true_false_questions:
-    print(q)
-    print()
+  deck = genanki.Deck(2141944527, 'Anatomy (generated)')
+
+  for q in p.true_false_questions:
+    note = AnatomyNote(fields=[q.prompt + ' (True/False)', q.answer])
+    deck.add_note(note)
+
+  deck.write_to_file('output.apkg')
 
 
 if __name__ == '__main__' and not hasattr(sys, 'ps1'):
