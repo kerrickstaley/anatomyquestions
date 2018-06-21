@@ -164,15 +164,17 @@ class Processor:
   def true_false_questions(self):
     return [TrueFalse.parse(q) for q in self.raw_true_false_questions]
 
-def main():
-  p = Processor('in.doc')
-  deck = genanki.Deck(2141944527, 'Anatomy (generated)')
 
-  for q in p.multiple_choice_questions + p.true_false_questions:
-    deck.add_note(q.to_note())
+def main(doc_paths):
+  deck = genanki.Deck(2141944527, 'Anatomy (generated)')
+  for doc_path in doc_paths:
+    p = Processor(doc_path)
+
+    for q in p.multiple_choice_questions + p.true_false_questions:
+      deck.add_note(q.to_note())
 
   deck.write_to_file('output.apkg')
 
 
 if __name__ == '__main__' and not hasattr(sys, 'ps1'):
-  main()
+  main(sys.argv[1:])
