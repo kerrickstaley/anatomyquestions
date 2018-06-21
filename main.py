@@ -3,6 +3,10 @@ import sys
 import re
 from cached_property import cached_property
 import string
+import tempfile
+import subprocess
+import os.path
+import glob
 
 class MultipleChoice:
   def __init__(self, prompt, options, answer, learning_outcome=None):
@@ -58,32 +62,56 @@ class TrueFalse:
 
 
 class Processor:
-  def __init__(self, txt_path):
-    self.txt_path = txt_path
+  def __init__(self, doc_path):
+    self.doc_path = doc_path
+
+  @cached_property
+  def doc_as_text(self):
+    tmpdir = tempfile.mkdtemp()
+    subprocess.check_call([
+      'libreoffice',
+      '--headless',
+      '--convert-to',
+      'txt:Text (encoded):UTF8',
+      '--outdir',
+      tmpdir,
+      self.doc_path])
+
+    # libreoffice is so dumb
+    while not glob.glob(os.path.join(tmpdir, '*.txt')):
+      pass
+
+    txt_file_path = glob.glob(os.path.join(tmpdir, '*.txt'))[0]
+
+    with open(txt_file_path) as f:
+      rv = f.read()
+
+    print(txt_file_path)
+
+    return rv
 
   @cached_property
   def raw_questions(self):
     rv = []
     qlines = []
-    with open(self.txt_path) as f:
-      for line in f:
-        # skip section headings
-        if re.match(r'^[0-9]+\.[1-9].*\bQuestions\b.*$',  line):
-          continue
+    for line in self.doc_as_text.splitlines():
+      # skip section headings
+      if re.match(r'^[0-9]+\.[1-9].*\bQuestions\b.*$',  line):
+        continue
 
-        if re.match(r'^[0-9]+\)', line):
-          rv.append(''.join(qlines).strip())
-          qlines = [line]
-          continue
+      if re.match(r'^[0-9]+\)', line):
+        rv.append('\n'.join(qlines).strip())
+        qlines = [line]
+        continue
 
-        qlines.append(line)
+      qlines.append(line)
 
-    rv.append(''.join(qlines).strip())
+    rv.append('\n'.join(qlines).strip())
 
     return rv
 
   @cached_property
-  def multiple_choice_questions_raw(self):
+  def raw_multiple_choice_questions(self):
     rv = []
     for q in self.raw_questions:
       if 'indicated by Label' in q:
@@ -100,7 +128,7 @@ class Processor:
     return rv
 
   @cached_property
-  def true_false_questions_raw(self):
+  def raw_true_false_questions(self):
     rv = []
     for q in self.raw_questions:
       if re.search(r'Answer:\s+(TRUE|FALSE)', q):
@@ -110,14 +138,14 @@ class Processor:
 
   @cached_property
   def multiple_choice_questions(self):
-    return [MultipleChoice.parse(q) for q in self.multiple_choice_questions_raw]
+    return [MultipleChoice.parse(q) for q in self.raw_multiple_choice_questions]
 
   @cached_property
   def true_false_questions(self):
-    return [TrueFalse.parse(q) for q in self.true_false_questions_raw]
+    return [TrueFalse.parse(q) for q in self.raw_true_false_questions]
 
 def main():
-  p = Processor('in.txt')
+  p = Processor('in.doc')
   for q in p.multiple_choice_questions + p.true_false_questions:
     print(q)
     print()
