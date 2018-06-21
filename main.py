@@ -36,13 +36,14 @@ class MultipleChoice:
 
     answer = lines[idx].split(': ')[1]
     idx += 1
-    learning_outcome = lines[idx].split(': ')[1]
+    learning_outcome = lines[idx].split(': ')[1].strip()
 
     return cls(prompt, options, answer, learning_outcome)
 
   def to_note(self):
+    tags = [f'chapter_{self.learning_outcome.split(".")[0]}', f'learning_outcome_{self.learning_outcome}']
     options_html = ''.join('<li>' + opt + '</li>' for opt in self.options)
-    return AnatomyMultipleChoiceNote(fields=[self.prompt, options_html, self.answer])
+    return AnatomyMultipleChoiceNote(fields=[self.prompt, options_html, self.answer], tags=tags)
 
   def __str__(self):
     options_str = '\n'.join(string.ascii_uppercase[i] + ') ' + opt for i, opt in enumerate(self.options))
@@ -61,12 +62,13 @@ class TrueFalse:
 
     prompt = lines[0].split(') ', 1)[1]
     answer = lines[1].split(': ')[1]
-    learning_outcome = lines[2].split(': ')[1]
+    learning_outcome = lines[2].split(': ')[1].strip()
 
     return cls(prompt, answer, learning_outcome)
 
   def to_note(self):
-    return AnatomyTrueFalseNote(fields=[self.prompt, self.answer])
+    tags = [f'chapter_{self.learning_outcome.split(".")[0]}', f'learning_outcome_{self.learning_outcome}']
+    return AnatomyTrueFalseNote(fields=[self.prompt, self.answer], tags=tags)
 
   def __str__(self):
     return f'{self.prompt}\nAnswer: {self.answer}\nLearning Outcome: {self.learning_outcome}'
