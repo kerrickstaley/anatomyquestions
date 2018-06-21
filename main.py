@@ -40,6 +40,10 @@ class MultipleChoice:
 
     return cls(prompt, options, answer, learning_outcome)
 
+  def to_note(self):
+    options_html = ''.join('<li>' + opt + '</li>' for opt in self.options)
+    return AnatomyMultipleChoiceNote(fields=[self.prompt, options_html, self.answer])
+
   def __str__(self):
     options_str = '\n'.join(string.ascii_uppercase[i] + ') ' + opt for i, opt in enumerate(self.options))
     return f'{self.prompt}\n{options_str}\nAnswer: {self.answer}\nLearning Outcome: {self.learning_outcome}'
@@ -60,6 +64,9 @@ class TrueFalse:
     learning_outcome = lines[2].split(': ')[1]
 
     return cls(prompt, answer, learning_outcome)
+
+  def to_note(self):
+    return AnatomyTrueFalseNote(fields=[self.prompt, self.answer])
 
   def __str__(self):
     return f'{self.prompt}\nAnswer: {self.answer}\nLearning Outcome: {self.learning_outcome}'
@@ -150,14 +157,8 @@ def main():
   p = Processor('in.doc')
   deck = genanki.Deck(2141944527, 'Anatomy (generated)')
 
-  for q in p.multiple_choice_questions:
-    options_html = ''.join('<li>' + opt + '</li>' for opt in q.options)
-    note = AnatomyMultipleChoiceNote(fields=[q.prompt, options_html, q.answer])
-    deck.add_note(note)
-
-  for q in p.true_false_questions:
-    note = AnatomyTrueFalseNote(fields=[q.prompt, q.answer])
-    deck.add_note(note)
+  for q in p.multiple_choice_questions + p.true_false_questions:
+    deck.add_note(q.to_note())
 
   deck.write_to_file('output.apkg')
 
