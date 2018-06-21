@@ -90,8 +90,6 @@ class Processor:
     with open(txt_file_path) as f:
       rv = f.read()
 
-    print(txt_file_path)
-
     return rv
 
   @cached_property
