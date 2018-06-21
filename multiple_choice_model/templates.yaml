@@ -1,0 +1,10 @@
+- name: Default
+  qfmt: |
+    {{Prompt}}
+    {{Options}}
+  afmt: |
+    {{FrontSide}}
+
+    <hr id=answer>
+
+    {{Answer}}

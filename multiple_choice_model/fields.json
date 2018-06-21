@@ -1,0 +1,29 @@
+[
+    {
+        "font": "Liberation Sans",
+        "media": [],
+        "name": "Prompt",
+        "ord": 0,
+        "rtl": false,
+        "size": 20,
+        "sticky": false
+    },
+    {
+        "font": "Liberation Sans",
+        "media": [],
+        "name": "Options",
+        "ord": 1,
+        "rtl": false,
+        "size": 20,
+        "sticky": false
+    },
+    {
+        "font": "Liberation Sans",
+        "media": [],
+        "name": "Answer",
+        "ord": 1,
+        "rtl": false,
+        "size": 20,
+        "sticky": false
+    }
+]
