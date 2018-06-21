@@ -1,9 +1,9 @@
 - name: Default
   qfmt: |
-    {{Front}}
+    {{Prompt}} (True / False)
   afmt: |
     {{FrontSide}}
 
     <hr id=answer>
 
-    {{Back}}
+    {{Answer}}

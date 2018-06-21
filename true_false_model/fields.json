@@ -2,7 +2,7 @@
     {
         "font": "Liberation Sans",
         "media": [],
-        "name": "Front",
+        "name": "Prompt",
         "ord": 0,
         "rtl": false,
         "size": 20,
@@ -11,7 +11,7 @@
     {
         "font": "Liberation Sans",
         "media": [],
-        "name": "Back",
+        "name": "Answer",
         "ord": 1,
         "rtl": false,
         "size": 20,

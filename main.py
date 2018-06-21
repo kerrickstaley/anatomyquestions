@@ -158,7 +158,7 @@ def main():
     deck.add_note(note)
 
   for q in p.true_false_questions:
-    note = AnatomyTrueFalseNote(fields=[q.prompt + ' (True/False)', q.answer])
+    note = AnatomyTrueFalseNote(fields=[q.prompt, q.answer])
     deck.add_note(note)
 
   deck.write_to_file('output.apkg')
