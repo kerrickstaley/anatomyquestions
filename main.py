@@ -153,7 +153,8 @@ def main():
   deck = genanki.Deck(2141944527, 'Anatomy (generated)')
 
   for q in p.multiple_choice_questions:
-    note = AnatomyMultipleChoiceNote(fields=[q.prompt, '<br>'.join(q.options), q.answer])
+    options_html = ''.join('<li>' + opt + '</li>' for opt in q.options)
+    note = AnatomyMultipleChoiceNote(fields=[q.prompt, options_html, q.answer])
     deck.add_note(note)
 
   for q in p.true_false_questions:

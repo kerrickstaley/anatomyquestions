@@ -1,7 +1,9 @@
 - name: Default
   qfmt: |
     {{Prompt}}
+    <ol id="options" type="A">
     {{Options}}
+    </ol>
   afmt: |
     {{FrontSide}}
 
