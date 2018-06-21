@@ -9,7 +9,7 @@ import os.path
 import glob
 
 import genanki
-from note import AnatomyNote
+from note import AnatomyTrueFalseNote
 
 
 class MultipleChoice:
@@ -153,7 +153,7 @@ def main():
   deck = genanki.Deck(2141944527, 'Anatomy (generated)')
 
   for q in p.true_false_questions:
-    note = AnatomyNote(fields=[q.prompt + ' (True/False)', q.answer])
+    note = AnatomyTrueFalseNote(fields=[q.prompt + ' (True/False)', q.answer])
     deck.add_note(note)
 
   deck.write_to_file('output.apkg')
