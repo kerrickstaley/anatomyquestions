@@ -165,8 +165,22 @@ class Processor:
     return [TrueFalse.parse(q) for q in self.raw_true_false_questions]
 
 
+def sort_docs(paths):
+  def extract_chapter(path):
+    fname = os.path.basename(path)
+    m = re.search(' ([0-9]+) ', fname)
+    if m:
+      return int(m.group(1))
+    return 0
+
+  return sorted(paths, key=extract_chapter)
+
+
 def main(doc_paths):
   deck = genanki.Deck(2141944527, 'Anatomy (generated)')
+
+  doc_paths = sort_docs(doc_paths)
+
   for doc_path in doc_paths:
     p = Processor(doc_path)
 
